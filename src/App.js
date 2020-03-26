@@ -1,7 +1,9 @@
-/* global kakao */
 import React, { Component } from "react";
 import "./App.css";
 import { Map } from "./components/Map";
+import TopBar from "./components/TopBar";
+
+/* global kakao */
 
 class App extends Component {
   map;
@@ -20,6 +22,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <TopBar />
         <Map />
       </div>
     );

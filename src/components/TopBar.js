@@ -1,3 +1,4 @@
+import React from "react";
 import {
   AppBar,
   IconButton,
@@ -6,31 +7,6 @@ import {
   Typography
 } from "@material-ui/core";
 import { Menu as MenuIcon } from "@material-ui/icons";
-import React from "react";
-
-const TopBar = () => {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            tupyoso-map
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
-};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,5 +19,29 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   }
 }));
+
+const TopBar = () => {
+  const classes = useStyles();
+
+  return (
+    <div>
+      <AppBar position="fixed">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            투표소맵
+          </Typography>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+};
 
 export default TopBar;

@@ -1,128 +1,59 @@
-import { FormControl, InputLabel, makeStyles, Select } from "@material-ui/core";
-import Axios from "axios";
-import React, { useEffect, useState } from "react";
+import { Button, makeStyles, Typography } from "@material-ui/core";
+import { Home } from "@material-ui/icons";
+import React, { useState } from "react";
+import RegionModal from "./RegionModal";
 
-const Controls = () => {
+const Controls = props => {
   const classes = useStyles();
 
-  const [sdName, setSdName] = useState("");
-  const [gsgName, setGsgName] = useState("");
-  const [emdName, setEmdName] = useState("");
-  const [sdList, setSdList] = useState([]);
-  const [gsgList, setGsgList] = useState([]);
-  const [emdList, setEmdList] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    Axios.post("url" + "/region/", {}).then(res => {
-      setSdList(res.data);
-    });
-  }, []);
-
-  const handleSdChange = e => {
-    setSdName(e.target.value);
-    setGsgList([]);
-    setEmdList([]);
-    setGsgName("");
-    setEmdName("");
-    Axios.post("url" + "/region/", {
-      sdName: e.target.value
-    }).then(res => {
-      setGsgList(res.data);
-    });
+  const handleModalOpen = () => {
+    setModalOpen(true);
   };
 
-  const handleGsgChange = e => {
-    setGsgName(e.target.value);
-    setEmdList([]);
-    setEmdName("");
-    Axios.post("url" + "/region/", {
-      sdName: sdName,
-      gusigunName: e.target.value
-    }).then(res => {
-      setEmdList(res.data);
-    });
+  const handleModalClose = a => {
+    setModalOpen(false);
   };
 
-  const handleEmdChange = e => {
-    setEmdName(e.target.value);
-    Axios.post("url" + "/region/", {
-      sdName: sdName,
-      gusigunName: gsgName,
-      emdName: e.target.value
-    }).then(res => {
-      console.log(res.data[0].sggName);
-    });
+  const handleApplyRegion = data => {
+    if (data.sdName === "") {
+      alert("시도명을 선택해 주세요.");
+      return;
+    } else if (data.gsgName === "") {
+      alert("구시군명을 선택해 주세요.");
+      return;
+    } else if (data.emdName === "") {
+      alert("읍면동명을 선택해 주세요.");
+      return;
+    }
+    setModalOpen(false);
+
+    props.setZoomLevel(5);
+
+    // api 호출
+
+    // 지도
   };
 
   return (
     <div className={classes.controlsContainer}>
-      <div>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel htmlFor="sd-select">시도명</InputLabel>
-          <Select
-            native
-            value={sdName}
-            onChange={handleSdChange}
-            label="시도명"
-            name="sdName"
-            inputProps={{
-              id: "sd-select"
-            }}
-            className={classes.select}
-          >
-            <option aria-label="None" value="" key={""} />
-            {sdList.map(item => (
-              <option value={item.sdName} key={item.sdName}>
-                {item.sdName}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel htmlFor="gsg-select">구시군명</InputLabel>
-          <Select
-            native
-            value={gsgName}
-            onChange={handleGsgChange}
-            label="구시군명"
-            name="gsgName"
-            inputProps={{
-              id: "gsg-select"
-            }}
-            className={classes.select}
-            disabled={sdName === ""}
-          >
-            <option aria-label="-" value="" />
-            {gsgList.map(item => (
-              <option value={item.gusigunName} key={item.gusigunName}>
-                {item.gusigunName}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel htmlFor="emd-select">읍면동명</InputLabel>
-          <Select
-            native
-            value={emdName}
-            onChange={handleEmdChange}
-            name="emdName"
-            label="읍면동명"
-            inputProps={{
-              id: "emd-select"
-            }}
-            className={classes.select}
-            disabled={gsgName === ""}
-          >
-            <option aria-label="-" value="" />
-            {emdList.map(item => (
-              <option value={item.emdName} key={item.emdName}>
-                {item.emdName}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+      <Button
+        variant="contained"
+        color="primary"
+        size="small"
+        className={classes.button}
+        startIcon={<Home />}
+        onClick={handleModalOpen}
+      >
+        우리동네 검색
+      </Button>
+      <Typography>a</Typography>
+      <RegionModal
+        open={modalOpen}
+        handleClose={handleModalClose}
+        handleApply={handleApplyRegion}
+      />
     </div>
   );
 };
@@ -130,8 +61,9 @@ const Controls = () => {
 const useStyles = makeStyles(theme => ({
   controlsContainer: {
     position: "absolute",
-    top: theme.spacing(10),
-    left: theme.spacing(2),
+    marginTop: theme.mixins.toolbar.minHeight,
+    top: theme.spacing(2),
+    left: theme.spacing(1),
     zIndex: 1000
   },
   formControl: {

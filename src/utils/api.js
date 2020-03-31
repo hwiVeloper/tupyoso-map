@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-const apiUri = "http://localhost";
+const apiUri = process.env.REACT_APP_API_URI;
 
 export const apiGet = endpoint => {
   return Axios.get(apiUri + endpoint);

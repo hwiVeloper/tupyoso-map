@@ -1,11 +1,20 @@
-import { Button, makeStyles, Typography } from "@material-ui/core";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  makeStyles
+} from "@material-ui/core";
 import { Home } from "@material-ui/icons";
 import React, { useState } from "react";
+import { apiPost } from "../utils/api";
 import RegionModal from "./RegionModal";
 
 const Controls = props => {
   const classes = useStyles();
 
+  const { kakao } = window;
+
+  const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = () => {
@@ -29,32 +38,47 @@ const Controls = props => {
     }
     setModalOpen(false);
 
-    props.setZoomLevel(5);
+    setIsLoading(true);
 
     // api 호출
-
-    // 지도
+    apiPost("/region/getPollPlaces", {
+      sdName: data.sdName,
+      gusigunName: data.gsgName,
+      emdName: data.emdName
+    })
+      .then(res => {
+        props.setCenter(res.data.center);
+        props.setZoomLevel(6);
+        props.addMarker(res.data.pollPlaces);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
-    <div className={classes.controlsContainer}>
-      <Button
-        variant="contained"
-        color="primary"
-        size="small"
-        className={classes.button}
-        startIcon={<Home />}
-        onClick={handleModalOpen}
-      >
-        우리동네 검색
-      </Button>
-      <Typography>a</Typography>
-      <RegionModal
-        open={modalOpen}
-        handleClose={handleModalClose}
-        handleApply={handleApplyRegion}
-      />
-    </div>
+    <>
+      <Backdrop className={classes.backdrop} open={isLoading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <div className={classes.controlsContainer}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          className={classes.button}
+          startIcon={<Home />}
+          onClick={handleModalOpen}
+        >
+          우리동네 검색
+        </Button>
+        <RegionModal
+          open={modalOpen}
+          handleClose={handleModalClose}
+          handleApply={handleApplyRegion}
+        />
+      </div>
+    </>
   );
 };
 
@@ -75,6 +99,10 @@ const useStyles = makeStyles(theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff"
   }
 }));
 

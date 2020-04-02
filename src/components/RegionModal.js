@@ -47,13 +47,6 @@ const RegionModal = props => {
 
   const handleEmdChange = e => {
     setEmdName(e.target.value);
-    apiPost("/region/", {
-      sdName: sdName,
-      gusigunName: gsgName,
-      emdName: e.target.value
-    }).then(res => {
-      console.log(res.data[0].sggName);
-    });
   };
 
   function resetValues() {

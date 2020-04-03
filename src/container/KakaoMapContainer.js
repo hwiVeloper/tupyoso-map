@@ -1,21 +1,36 @@
 import { Container } from "@material-ui/core";
 import React, { Component } from "react";
 import Controls from "../components/Controls";
-import { InfoWindow } from "../components/InfoWindow";
-import { render } from "react-dom";
+import { renderToString } from "react-dom/server";
+import InfoWindow from "../components/InfoWindow";
 
 const { kakao } = window;
 
 class KakaoMapContainer extends Component {
   map;
   markers = [];
-  openedInfoWindow = null;
+  placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
+  contentNode = document.createElement("div");
 
   componentDidMount() {
     let el = document.getElementById("map");
     this.map = new kakao.maps.Map(el, {
       center: new kakao.maps.LatLng(36.61090580199106, 127.28712340471264),
       level: 13
+    });
+    this.placeOverlay.setContent(this.contentNode);
+
+    var po = this.placeOverlay;
+
+    kakao.maps.event.addListener(this.map, "zoom_changed", function() {
+      if (po.setMap) {
+        po.setMap(null);
+      }
+    });
+    kakao.maps.event.addListener(this.map, "bounds_changed", function() {
+      if (po.setMap) {
+        po.setMap(null);
+      }
     });
   }
 
@@ -39,6 +54,13 @@ class KakaoMapContainer extends Component {
         clickable: true
       });
 
+      // click event
+      (function(marker, pollPlace, that) {
+        kakao.maps.event.addListener(marker, "click", function() {
+          that.displayPlaceInfo(pollPlace);
+        });
+      })(marker, pollPlaces[i], this);
+
       this.markers.push(marker);
     }
   }
@@ -47,6 +69,18 @@ class KakaoMapContainer extends Component {
     for (let i = 0; i < this.markers.length; i++) {
       this.markers[i].setMap(null);
     }
+  }
+
+  displayPlaceInfo(place) {
+    var content = renderToString(<InfoWindow data={place} />);
+
+    this.contentNode.innerHTML = content;
+    this.placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
+    this.placeOverlay.setMap(this.map);
+  }
+
+  removePlaceInfo() {
+    this.placeOverlay.setMap(null);
   }
 
   render() {

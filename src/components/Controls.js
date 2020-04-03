@@ -12,8 +12,6 @@ import RegionModal from "./RegionModal";
 const Controls = props => {
   const classes = useStyles();
 
-  const { kakao } = window;
-
   const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 

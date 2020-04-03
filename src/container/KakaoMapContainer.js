@@ -86,16 +86,16 @@ class KakaoMapContainer extends Component {
   render() {
     return (
       <>
-        <Controls
-          setZoomLevel={level => this.setZoomLevel(level)}
-          setCenter={coords => this.setCenter(coords)}
-          addMarker={pollPlaces => this.addMarker(pollPlaces)}
-        />
-        <div>
-          <Container disableGutters={true} maxWidth={false}>
-            <div id={`map`} style={{ width: "100vw", height: "100vh" }}></div>
-          </Container>
-        </div>
+        {/* <div> */}
+        <Container disableGutters={true} maxWidth={false}>
+          <Controls
+            setZoomLevel={level => this.setZoomLevel(level)}
+            setCenter={coords => this.setCenter(coords)}
+            addMarker={pollPlaces => this.addMarker(pollPlaces)}
+          />
+          <div id={`map`} style={{ width: "100vw", height: "100vh" }}></div>
+        </Container>
+        {/* </div> */}
       </>
     );
   }

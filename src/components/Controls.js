@@ -2,9 +2,10 @@ import {
   Backdrop,
   Button,
   CircularProgress,
+  IconButton,
   makeStyles
 } from "@material-ui/core";
-import { Home } from "@material-ui/icons";
+import { GpsFixed, Home } from "@material-ui/icons";
 import React, { useState } from "react";
 import { apiPost } from "../utils/api";
 import RegionModal from "./RegionModal";
@@ -26,13 +27,13 @@ const Controls = props => {
   const handleApplyRegion = data => {
     if (data.sdName === "") {
       alert("시도명을 선택해 주세요.");
-      return;
+      return false;
     } else if (data.gsgName === "") {
       alert("구시군명을 선택해 주세요.");
-      return;
+      return false;
     } else if (data.emdName === "") {
       alert("읍면동명을 선택해 주세요.");
-      return;
+      return false;
     }
     setModalOpen(false);
 
@@ -60,10 +61,18 @@ const Controls = props => {
         <CircularProgress color="inherit" />
       </Backdrop>
       <div className={classes.controlsContainer}>
+        {/* <Button
+          variant="contained"
+          color="secondary"
+          className={classes.gpsButton}
+          startIcon={<GpsFixed />}
+          onClick={props.getLocation}
+        >
+          내위치
+        </Button> */}
         <Button
           variant="contained"
           color="primary"
-          size="small"
           className={classes.button}
           startIcon={<Home />}
           onClick={handleModalOpen}
@@ -101,6 +110,9 @@ const useStyles = makeStyles(theme => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff"
+  },
+  gpsButton: {
+    marginRight: theme.spacing(1)
   }
 }));
 

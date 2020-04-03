@@ -11,6 +11,7 @@ class KakaoMapContainer extends Component {
   markers = [];
   placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
   contentNode = document.createElement("div");
+  gps;
 
   componentDidMount() {
     let el = document.getElementById("map");
@@ -83,6 +84,25 @@ class KakaoMapContainer extends Component {
     this.placeOverlay.setMap(null);
   }
 
+  getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          console.log(position);
+        },
+        err => {
+          if (err.code === 1) {
+            alert("위치설정을 허용 후 다시 시도해 주세요.");
+          }
+        }
+      );
+    } else {
+      console.log("location nope!");
+      // show toast
+      // https://material-ui.com/components/snackbars/#customized-snackbars
+    }
+  }
+
   render() {
     return (
       <Container
@@ -94,6 +114,7 @@ class KakaoMapContainer extends Component {
           setZoomLevel={level => this.setZoomLevel(level)}
           setCenter={coords => this.setCenter(coords)}
           addMarker={pollPlaces => this.addMarker(pollPlaces)}
+          getLocation={() => this.getLocation()}
         />
         <div id={`map`} style={{ width: "100%", height: "100%" }}></div>
       </Container>

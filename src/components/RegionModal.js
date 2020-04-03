@@ -130,12 +130,15 @@ const RegionModal = props => {
             size="small"
             color="primary"
             onClick={() => {
-              props.handleApply({
-                sdName: sdName,
-                gsgName: gsgName,
-                emdName: emdName
-              });
-              resetValues();
+              if (
+                props.handleApply({
+                  sdName: sdName,
+                  gsgName: gsgName,
+                  emdName: emdName
+                }) !== false
+              ) {
+                resetValues();
+              }
             }}
           >
             적용

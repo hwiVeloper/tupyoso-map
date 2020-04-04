@@ -2,8 +2,8 @@ import {
   Backdrop,
   Button,
   CircularProgress,
-  IconButton,
-  makeStyles
+  makeStyles,
+  Snackbar
 } from "@material-ui/core";
 import { GpsFixed, Home } from "@material-ui/icons";
 import React, { useState } from "react";
@@ -15,6 +15,7 @@ const Controls = props => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -55,21 +56,64 @@ const Controls = props => {
       });
   };
 
+  const handleMyLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          if (position !== null) {
+            setIsLoading(true);
+
+            apiPost("/region/getPollPlacesByLocation", {
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude
+            })
+              .then(res => {
+                props.setCenter(res.data.center);
+                props.setZoomLevel(6);
+                props.addMarker(res.data.pollPlaces);
+                props.addMyLocationMarker(res.data.center);
+              })
+              .finally(() => {
+                setIsLoading(false);
+              });
+          }
+        },
+        err => {
+          if (err.code === 1) {
+            setToastOpen(true);
+          }
+        }
+      );
+    }
+  };
+
   return (
     <>
       <Backdrop className={classes.backdrop} open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center"
+        }}
+        open={toastOpen}
+        autoHideDuration={3000}
+        message="위치설정을 허용 후 다시 시도해 주세요."
+        onClose={() => {
+          setToastOpen(false);
+        }}
+      />
       <div className={classes.controlsContainer}>
-        {/* <Button
+        <Button
           variant="contained"
           color="secondary"
           className={classes.gpsButton}
           startIcon={<GpsFixed />}
-          onClick={props.getLocation}
+          onClick={handleMyLocation}
         >
           내위치
-        </Button> */}
+        </Button>
         <Button
           variant="contained"
           color="primary"

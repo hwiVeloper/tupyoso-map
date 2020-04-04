@@ -1,0 +1,19 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="height: 100%; width: 100%; background: transparent" width="128px" height="128px">
+  <g class="ldl-scale" style="transform-origin: 50% 50%; transform: rotate(0deg) scale(0.8, 0.8);">
+    <g class="ldl-ani">
+      <g class="ldl-layer">
+        <g class="ldl-ani" style="transform: scale(0.91); transform-origin: 50px 50px; animation: 1.11111s linear -0.833333s infinite normal forwards running breath-126cb68d-8dec-41a3-a995-43f62d16a8ad;">
+          <circle fill="none" r="15" cy="41.829" cx="50"></circle>
+        </g>
+      </g>
+      <g class="ldl-layer">
+        <g class="ldl-ani" style="transform: scale(0.91); transform-origin: 50px 50px; animation: 1.11111s linear -1.11111s infinite normal forwards running breath-126cb68d-8dec-41a3-a995-43f62d16a8ad;">
+          <path fill="#f81b24" d="M50 12.037c-16.453 0-29.792 13.338-29.792 29.792 0 13.064 8.412 24.156 20.112 28.175l6.104 15.523c1.277 3.248 5.874 3.248 7.152 0l6.104-15.523c11.7-4.019 20.112-15.111 20.112-28.175 0-16.454-13.339-29.792-29.792-29.792zm0 44.792c-8.284 0-15-6.716-15-15 0-8.284 6.716-15 15-15 8.284 0 15 6.716 15 15 0 8.284-6.716 15-15 15z" style="fill: #f81b24">
+          </path>
+        </g>
+      </g>
+      <metadata xmlns:d="https://loading.io/stock/">
+      </metadata>
+    </g>
+  </g>
+</svg>

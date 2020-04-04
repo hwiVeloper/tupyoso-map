@@ -1,12 +1,17 @@
 import { Container } from "@material-ui/core";
 import React, { Component } from "react";
-import Controls from "../components/Controls";
 import { renderToString } from "react-dom/server";
+import Controls from "../components/Controls";
 import InfoWindow from "../components/InfoWindow";
+import myLoc from "../assets/mylocation.svg";
 
 const { kakao } = window;
 
 class KakaoMapContainer extends Component {
+  state = {
+    isLoading: false
+  };
+
   map;
   markers = [];
   placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
@@ -66,6 +71,27 @@ class KakaoMapContainer extends Component {
     }
   }
 
+  addMyLocationMarker(myLocation) {
+    var imageSrc = myLoc;
+    var imageSize = new kakao.maps.Size(64, 64); // 마커이미지의 크기입니다
+    var imageOption = { offset: new kakao.maps.Point(27, 69) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+    // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+    var markerImage = new kakao.maps.MarkerImage(
+      imageSrc,
+      imageSize,
+      imageOption
+    );
+
+    // create marker
+    var marker = new kakao.maps.Marker({
+      map: this.map,
+      position: new kakao.maps.LatLng(myLocation.y, myLocation.x),
+      image: markerImage
+    });
+
+    this.markers.push(marker);
+  }
+
   deleteMarkers() {
     for (let i = 0; i < this.markers.length; i++) {
       this.markers[i].setMap(null);
@@ -84,25 +110,6 @@ class KakaoMapContainer extends Component {
     this.placeOverlay.setMap(null);
   }
 
-  getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          console.log(position);
-        },
-        err => {
-          if (err.code === 1) {
-            alert("위치설정을 허용 후 다시 시도해 주세요.");
-          }
-        }
-      );
-    } else {
-      console.log("location nope!");
-      // show toast
-      // https://material-ui.com/components/snackbars/#customized-snackbars
-    }
-  }
-
   render() {
     return (
       <Container
@@ -114,7 +121,9 @@ class KakaoMapContainer extends Component {
           setZoomLevel={level => this.setZoomLevel(level)}
           setCenter={coords => this.setCenter(coords)}
           addMarker={pollPlaces => this.addMarker(pollPlaces)}
-          getLocation={() => this.getLocation()}
+          addMyLocationMarker={myLocation =>
+            this.addMyLocationMarker(myLocation)
+          }
         />
         <div id={`map`} style={{ width: "100%", height: "100%" }}></div>
       </Container>

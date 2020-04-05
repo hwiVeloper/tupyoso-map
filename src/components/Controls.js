@@ -3,14 +3,15 @@ import {
   Button,
   CircularProgress,
   makeStyles,
-  Snackbar
+  Snackbar,
 } from "@material-ui/core";
 import { GpsFixed, Home } from "@material-ui/icons";
+import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { apiPost } from "../utils/api";
 import RegionModal from "./RegionModal";
 
-const Controls = props => {
+const Controls = (props) => {
   const classes = useStyles();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -21,11 +22,11 @@ const Controls = props => {
     setModalOpen(true);
   };
 
-  const handleModalClose = a => {
+  const handleModalClose = (a) => {
     setModalOpen(false);
   };
 
-  const handleApplyRegion = data => {
+  const handleApplyRegion = (data) => {
     if (data.sdName === "") {
       alert("시도명을 선택해 주세요.");
       return false;
@@ -44,9 +45,9 @@ const Controls = props => {
     apiPost("/region/getPollPlaces", {
       sdName: data.sdName,
       gusigunName: data.gsgName,
-      emdName: data.emdName
+      emdName: data.emdName,
     })
-      .then(res => {
+      .then((res) => {
         props.setCenter(res.data.center);
         props.setZoomLevel(6);
         props.addMarker(res.data.pollPlaces);
@@ -59,15 +60,14 @@ const Controls = props => {
   const handleMyLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        position => {
+        (position) => {
+          setIsLoading(true);
           if (position !== null) {
-            setIsLoading(true);
-
             apiPost("/region/getPollPlacesByLocation", {
               longitude: position.coords.longitude,
-              latitude: position.coords.latitude
+              latitude: position.coords.latitude,
             })
-              .then(res => {
+              .then((res) => {
                 props.setCenter(res.data.center);
                 props.setZoomLevel(6);
                 props.addMarker(res.data.pollPlaces);
@@ -78,7 +78,7 @@ const Controls = props => {
               });
           }
         },
-        err => {
+        (err) => {
           if (err.code === 1) {
             setToastOpen(true);
           }
@@ -91,11 +91,12 @@ const Controls = props => {
     <>
       <Backdrop className={classes.backdrop} open={isLoading}>
         <CircularProgress color="inherit" />
+        <Typography>데이터 로딩중...</Typography>
       </Backdrop>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "center"
+          horizontal: "center",
         }}
         open={toastOpen}
         autoHideDuration={3000}
@@ -133,31 +134,32 @@ const Controls = props => {
   );
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   controlsContainer: {
     position: "absolute",
     marginTop: theme.mixins.toolbar.minHeight,
     top: theme.spacing(2),
     left: theme.spacing(1),
-    zIndex: 1000
+    zIndex: 1000,
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120
+    minWidth: 120,
   },
   select: {
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   selectEmpty: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
-    color: "#fff"
+    color: "#fff",
+    flexDirection: "column",
   },
   gpsButton: {
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 
 export default Controls;

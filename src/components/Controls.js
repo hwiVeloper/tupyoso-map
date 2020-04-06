@@ -4,8 +4,15 @@ import {
   CircularProgress,
   makeStyles,
   Snackbar,
+  Paper,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  IconButton,
+  Fab,
+  Switch,
 } from "@material-ui/core";
-import { GpsFixed, Home } from "@material-ui/icons";
+import { GpsFixed, Home, Search } from "@material-ui/icons";
 import { Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { apiPost } from "../utils/api";
@@ -17,6 +24,7 @@ const Controls = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
+  const [preYn, setPreYn] = useState("N");
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -87,6 +95,10 @@ const Controls = (props) => {
     }
   };
 
+  const handlePreYnChange = (e) => {
+    setPreYn(e.target.value);
+  };
+
   return (
     <>
       <Backdrop className={classes.backdrop} open={isLoading}>
@@ -106,24 +118,22 @@ const Controls = (props) => {
         }}
       />
       <div className={classes.controlsContainer}>
-        <Button
-          variant="contained"
+        <Fab
           color="secondary"
-          className={classes.gpsButton}
-          startIcon={<GpsFixed />}
+          size="small"
           onClick={handleMyLocation}
+          className={classes.gpsButton}
         >
-          내위치
-        </Button>
-        <Button
-          variant="contained"
+          <GpsFixed />
+        </Fab>
+        <Fab
           color="primary"
+          size="small"
           className={classes.button}
-          startIcon={<Home />}
           onClick={handleModalOpen}
         >
-          우리동네 검색
-        </Button>
+          <Search />
+        </Fab>
         <RegionModal
           open={modalOpen}
           handleClose={handleModalClose}

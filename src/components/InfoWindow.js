@@ -7,12 +7,12 @@ const InfoWindow = (props) => {
     <div class="placeinfo_wrap">
       <div class="placeinfo">
         <h6 class="title" href="" target="_blank">
-          {placeInfo.psName}
+          {placeInfo.evPsName}
         </h6>
         <span>{placeInfo.addr}</span>
         <span class="jibun">{placeInfo.placeName}</span>
         <span>{placeInfo.floor}</span>
-        <span class="tel">{placeInfo.psName}</span>
+        <span class="tel">{placeInfo.evPsName}</span>
       </div>
       <div class="after"></div>
     </div>
